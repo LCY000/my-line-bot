@@ -15,6 +15,9 @@ app = Flask(__name__)
 line_bot_api = LineBotApi('5Upflq5dGSdO0XcPbzx+s3QdYSA6C+bknNz/4xWrs7HvMulaIdcU0K5ojdFd8c6/c6jdL2pqHWY9MHQrRBbEp0yG2hmxgpkY4kiILYkLWvgCYDR3zpT3rn1vLKnF3emHNh9qeLjXHSNQ1AfMDfOPQQdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('0f6fa69d1a0843d685a121d4d975b078')
 
+@app.route("/")
+def home():
+    return "LINE BOT API Server is running."
 
 @app.route("/callback", methods=['POST'])
 def callback():
