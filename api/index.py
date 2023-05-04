@@ -1,3 +1,6 @@
+import openai
+import os
+
 from flask import Flask, request, abort
 
 from linebot import (
@@ -10,7 +13,30 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
-from api.chatgpt import chatgpt
+def chatgpt(input):
+    # 設定OpenAI API密鑰
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+    # openai.api_key = "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"
+
+    # 載入ChatGPT模型
+    model_engine = "text-davinci-003"
+
+    # 設定使用者輸入
+    input_text = input
+
+    # 設定生成的文本長度
+    output_length = 300
+
+    # 生成回應
+    # response = model.complete(prompt, max_tokens=100)
+    response = openai.Completion.create(
+        engine=model_engine,
+        prompt=input_text,
+        max_tokens=output_length,
+    )
+
+    # 輸出回應
+    return response.choices[0].text
 
 app = Flask(__name__)
 
@@ -49,3 +75,4 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run()
+    # print(chatgpt("hello world"))
