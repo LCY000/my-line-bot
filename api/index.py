@@ -32,7 +32,7 @@ def callback():
 
     # handle webhook body
     try:
-        webhook_handler.handle(chatgpt.chatgpt(body), signature)
+        webhook_handler.handle(body, signature)
     except InvalidSignatureError:
         print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
@@ -44,7 +44,7 @@ def callback():
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=chatgpt.chatgpt(event.message.text)))
 
 
 if __name__ == "__main__":
