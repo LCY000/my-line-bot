@@ -3,7 +3,7 @@ import os
 
 def chatgpt(input):
     # 設定OpenAI API密鑰
-    openai.api_key = "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"
+    openai.api_key = "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"
 
     # 載入ChatGPT模型
     model_engine = "text-davinci-003"
