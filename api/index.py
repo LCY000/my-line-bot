@@ -32,7 +32,7 @@ def callback():
 
     # handle webhook body
     try:
-        webhook_handler.handle(chatgpt(body), signature)
+        webhook_handler.handle(chatgpt.chatgpt(body), signature)
     except InvalidSignatureError:
         print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
