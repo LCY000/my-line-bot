@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
-import chatgpt
+from api.chatgpt import chatgpt
 
 app = Flask(__name__)
 
@@ -44,7 +44,7 @@ def callback():
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=chatgpt.chatgpt(event.message.text)))
+        TextSendMessage(text=chatgpt(event.message.text)))
 
 
 if __name__ == "__main__":
