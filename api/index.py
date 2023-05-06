@@ -34,9 +34,9 @@ def chatgpt(input_text, user_id):
     # 取得用户的对话历史
     dialogues = user_dialogues[user_id]
     
-    # 如果对话数量超过 20，就只保留最近的 20 个对话
-    if len(dialogues) > 20:
-        dialogues = dialogues[-20:]
+    # 如果对话数量超过 30，就只保留最近的 30 个对话
+    if len(dialogues) > 30:
+        dialogues = dialogues[-30:]
     
     # 用一个变量来记录用户最后一次发送的消息是否为偶数
     last_message_is_even = last_message_indices[user_id] % 2 == 0
