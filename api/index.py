@@ -21,19 +21,23 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 model_engine = "text-davinci-003"
 
 # 設定生成的文本長度
-# output_length = 300
+output_length = request.args.get('length', 300)
 
-# 建立一個字典，用來儲存每個Line用戶的前4個對話
+# 建立一個字典，用來儲存每個Line用戶的前20個對話
 user_dialogues = defaultdict(list)
 
 def chatgpt(input_text, user_id):
     
     # 取得使用者的對話歷史
-    history = user_dialogues[user_id]
-
+    dialogues = user_dialogues[user_id]
+    
+    # 如果對話數量超過20，就只保留最近的20個對話
+    if len(dialogues) > 20:
+        dialogues = dialogues[-20:]
+    
     # 將歷史對話轉成 OpenAI API 所需的格式，即顯示誰說的
     history_formatted = ""
-    for i, dialogue in enumerate(history):
+    for i, dialogue in enumerate(dialogues):
         if i % 2 == 0:
             history_formatted += f"\nUser: {dialogue}"
         else:
@@ -44,7 +48,7 @@ def chatgpt(input_text, user_id):
         engine=model_engine,
         prompt=input_text,
         additional_text=history_formatted,
-        # max_tokens=output_length,
+        max_tokens=output_length,
         temperature=1.2
     )
 
