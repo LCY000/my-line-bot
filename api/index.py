@@ -21,13 +21,11 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 model_engine = "text-davinci-003"
 
 # 設定生成的文本長度
-# output_length = request.args.get('length', 300)
+output_length = 300
 
 # 建立一个字典，用来储存每个Line用户的对话
 user_dialogues = defaultdict(list)
 
-# 用一个字典来记录用户最后一次发送的消息的序号
-last_message_indices = defaultdict(int)
 
 def chatgpt(input_text, user_id):
     
@@ -61,16 +59,13 @@ def chatgpt(input_text, user_id):
         engine=model_engine,
         prompt=input_text,
         additional_text=history_formatted,
-        # max_tokens=output_length,
+        max_tokens=output_length,
         temperature=1.2 
     )
 
     # 将这次的输入和回应加入用户的对话历史中
     user_dialogues[user_id].append(input_text)
     user_dialogues[user_id].append(response.choices[0].text)
-    
-    # 更新用户最后一次发送的消息的序号
-    last_message_indices[user_id] = len(user_dialogues[user_id]) - 1
 
     # 输出回应
     return response.choices[0].text
