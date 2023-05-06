@@ -45,14 +45,14 @@ def chatgpt(input_text, user_id):
         # 根据用户最后一次发送的消息是奇数还是偶数来决定是用户说的话还是AI说的话
         if i % 2 == 0:
             if last_message_is_even:
-                history_formatted += f"\nUser: {dialogue}"
+                history_formatted += f"\我(User用戶): {dialogue}"
             else:
-                history_formatted += f"\nAI: {dialogue}"
+                history_formatted += f"\n你(AI): {dialogue}"
         else:
             if last_message_is_even:
-                history_formatted += f"\nAI: {dialogue}"
+                history_formatted += f"\n你(AI): {dialogue}"
             else:
-                history_formatted += f"\nUser: {dialogue}"
+                history_formatted += f"\n我(User用戶): {dialogue}"
     
     # 生成回应
     response = openai.Completion.create(
