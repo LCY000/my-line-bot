@@ -33,7 +33,7 @@ def chatgpt(input):
         engine=model_engine,
         prompt=input_text,
         max_tokens=output_length,
-        temperature=1.7
+        temperature=1.9
     )
 
     # 輸出回應
