@@ -34,8 +34,8 @@ def chatgpt(input_text, user_id):
     # 生成回應
     response = openai.Completion.create(
         engine=model_engine,
-        prompt=history,
-        additional_text=input_text,
+        prompt=input_text,
+        additional_text=history,
         max_tokens=output_length,
         temperature=1.3
     )
