@@ -23,15 +23,24 @@ model_engine = "text-davinci-003"
 # 設定生成的文本長度
 output_length = 300
 
-# 建立一個字典，用來儲存每個Line用戶的前6個對話
+# 設定生成的文本長度
+output_length = 300
+
+# 建立一個字典，用來儲存每個Line用戶的前10個對話
 user_dialogues = defaultdict(list)
+
+# 建立一個字典，用來儲存每個Line用戶的最後一次輸入
+last_input = {}
 
 def chatgpt(input_text, user_id):
     # 每個Line用戶只保留前10個對話
     user_dialogues[user_id] = user_dialogues[user_id][-9:] + [input_text]
 
-    # 合併每個Line用戶的前10個對話，作為ChatGPT的輸入
-    input_history = "\n".join(user_dialogues[user_id])
+    # 如果這不是使用者的第一個輸入，就加上最後一個輸入，讓模型可以區分歷史和現在的輸入
+    if user_id in last_input:
+        input_history = "\n".join(user_dialogues[user_id]) + "\n" + last_input[user_id]
+    else:
+        input_history = "\n".join(user_dialogues[user_id])
 
     # 生成回應
     response = openai.Completion.create(
@@ -41,8 +50,12 @@ def chatgpt(input_text, user_id):
         temperature=1.3
     )
 
+    # 記住這次輸入，以便下一次使用
+    last_input[user_id] = input_text
+
     # 輸出回應
     return response.choices[0].text
+
 
 app = Flask(__name__)
 
