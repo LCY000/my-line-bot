@@ -18,7 +18,7 @@ from linebot.models import (
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # 載入ChatGPT模型
-model_engine = "text-davinci-004"
+model_engine = "text-davinci-003"
 
 # 設定生成的文本長度
 output_length = request.args.get('length', 300)
