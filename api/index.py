@@ -41,7 +41,7 @@ def chatgpt(input_text, user_id):
     
     # 将历史对话转成 OpenAI API 所需的格式，即显示谁说的
     history_formatted = ""
-    for i, dialogue in enumerate(dialogues):
+    for i, dialogue in enumerate(reversed(dialogues)):
         # 根据用户最后一次发送的消息是奇数还是偶数来决定是用户说的话还是AI说的话
         if i % 2 == 0:
             if last_message_is_even:
