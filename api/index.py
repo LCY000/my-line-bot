@@ -143,11 +143,10 @@ def handle_message(event):
     )
 
     # 取得生成的文本
-    output_text = response.choices[0].text
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=output_text))
+        TextSendMessage(text=response.choices[0].text))
 
 if __name__ == "__main__":
     app.run()
