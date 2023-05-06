@@ -45,7 +45,7 @@ def chatgpt(input_text, user_id):
         prompt=input_text,
         additional_text=history_formatted,
         # max_tokens=output_length,
-        temperature=1.3
+        temperature=1.2
     )
 
     # 將這次的輸入和回應加入使用者的對話歷史中
