@@ -28,9 +28,9 @@ user_dialogues = defaultdict(list)
 
 def chatgpt(input_text, user_id):
     # 每個Line用戶只保留前6個對話
-    user_dialogues[user_id] = user_dialogues[user_id][-5:] + [input_text]
+    user_dialogues[user_id] = user_dialogues[user_id][-9:] + [input_text]
 
-    # 合併每個Line用戶的前6個對話，作為ChatGPT的輸入
+    # 合併每個Line用戶的前10個對話，作為ChatGPT的輸入
     input_history = "\n".join(user_dialogues[user_id])
 
     # 生成回應
