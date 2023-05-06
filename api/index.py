@@ -31,17 +31,15 @@ last_message_indices = defaultdict(int)
 
 def chatgpt(input_text, user_id):
     
+    # 取得用户的对话历史，并将其反转
+    dialogues = list(reversed(user_dialogues[user_id]))
     
-
-    # 取得用户的对话历史
-    dialogues = user_dialogues[user_id]
-    
-    # 如果对话数量超过 30，就只保留最近的 30 个对话
+    # 如果对话数量超过 20，就只保留最近的 20 个对话
     if len(dialogues) > 20:
-        dialogues = dialogues[-20:]
+        dialogues = dialogues[:20]
     
     # 用一个变量来记录用户最后一次发送的消息是否为偶数
-    last_message_is_even = last_message_indices[user_id] % 2 == 0
+    last_message_is_even = len(dialogues) % 2 == 0
     
     # 将历史对话转成 OpenAI API 所需的格式，即显示谁说的
     history_formatted = ""
@@ -57,14 +55,14 @@ def chatgpt(input_text, user_id):
                 history_formatted += f"\nAI: {dialogue}"
             else:
                 history_formatted += f"\nUser: {dialogue}"
-
+    
     # 生成回应
     response = openai.Completion.create(
         engine=model_engine,
         prompt=input_text,
         additional_text=history_formatted,
         # max_tokens=output_length,
-        temperature=0.6
+        temperature=1.2 
     )
 
     # 将这次的输入和回应加入用户的对话历史中
@@ -72,7 +70,7 @@ def chatgpt(input_text, user_id):
     user_dialogues[user_id].append(response.choices[0].text)
     
     # 更新用户最后一次发送的消息的序号
-    last_message_indices[user_id] += 1
+    last_message_indices[user_id] = len(user_dialogues[user_id]) - 1
 
     # 输出回应
     return response.choices[0].text
