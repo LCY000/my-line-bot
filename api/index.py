@@ -73,8 +73,8 @@ def chatgpt(input_text, user_id):
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('5Upflq5dGSdO0XcPbzx+s3QdYSA6C+bknNz/4xWrs7HvMulaIdcU0K5ojdFd8c6/c6jdL2pqHWY9MHQrRBbEp0yG2hmxgpkY4kiILYkLWvgCYDR3zpT3rn1vLKnF3emHNh9qeLjXHSNQ1AfMDfOPQQdB04t89/1O/w1cDnyilFU=')
-webhook_handler = WebhookHandler('0f6fa69d1a0843d685a121d4d975b078')
+line_bot_api = LineBotApi('zP6LetZS+mEvPVPLAbJbn8K2Vf/syosC++vbGT9nnaPDZytcDe6glUMnkYQembv6SY3rD09dzF5PPLDEbrtwba+NNefzzvknBHZZ6g0PO0Wewhlv99hDlzq2gQrzbmATO9N60I+9uz8gl7hMWBFu5QdB04t89/1O/w1cDnyilFU=')
+webhook_handler = WebhookHandler('aa515afa1bf748a3805ee3c599a71c95')
 
 @app.route("/")
 def home():
