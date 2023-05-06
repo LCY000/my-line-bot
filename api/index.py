@@ -29,38 +29,34 @@ user_dialogues = defaultdict(list)
 # 用一个字典来记录用户最后一次发送的消息的序号
 last_message_indices = defaultdict(int)
 
-# 定义每批次对话历史的最大长度
-MAX_HISTORY_LENGTH = 10
-
 def chatgpt(input_text, user_id):
     
+    
+
     # 取得用户的对话历史
     dialogues = user_dialogues[user_id]
     
-    # 如果对话数量超过最大长度，就进行分批处理
-    num_batches = len(dialogues) // MAX_HISTORY_LENGTH
-    if len(dialogues) % MAX_HISTORY_LENGTH != 0:
-        num_batches += 1
-    batched_dialogues = [dialogues[i:i+MAX_HISTORY_LENGTH] for i in range(0, len(dialogues), MAX_HISTORY_LENGTH)]
+    # 如果对话数量超过 30，就只保留最近的 30 个对话
+    if len(dialogues) > 20:
+        dialogues = dialogues[-20:]
     
     # 用一个变量来记录用户最后一次发送的消息是否为偶数
     last_message_is_even = last_message_indices[user_id] % 2 == 0
     
     # 将历史对话转成 OpenAI API 所需的格式，即显示谁说的
     history_formatted = ""
-    for batch in batched_dialogues:
-        for i, dialogue in enumerate(batch):
-            # 根据用户最后一次发送的消息是奇数还是偶数来决定是用户说的话还是AI说的话
-            if i % 2 == 0:
-                if last_message_is_even:
-                    history_formatted += f"\nUser: {dialogue}"
-                else:
-                    history_formatted += f"\nAI: {dialogue}"
+    for i, dialogue in enumerate(dialogues):
+        # 根据用户最后一次发送的消息是奇数还是偶数来决定是用户说的话还是AI说的话
+        if i % 2 == 0:
+            if last_message_is_even:
+                history_formatted += f"\nUser: {dialogue}"
             else:
-                if last_message_is_even:
-                    history_formatted += f"\nAI: {dialogue}"
-                else:
-                    history_formatted += f"\nUser: {dialogue}"
+                history_formatted += f"\nAI: {dialogue}"
+        else:
+            if last_message_is_even:
+                history_formatted += f"\nAI: {dialogue}"
+            else:
+                history_formatted += f"\nUser: {dialogue}"
 
     # 生成回应
     response = openai.Completion.create(
@@ -68,7 +64,7 @@ def chatgpt(input_text, user_id):
         prompt=input_text,
         additional_text=history_formatted,
         # max_tokens=output_length,
-        temperature=0.8
+        temperature=1.0
     )
 
     # 将这次的输入和回应加入用户的对话历史中
