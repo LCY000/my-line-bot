@@ -23,27 +23,40 @@ model_engine = "text-davinci-003"
 # 設定生成的文本長度
 output_length = request.args.get('length', 300)
 
-# 建立一個字典，用來儲存每個Line用戶的前20個對話
+# 建立一个字典，用来储存每个Line用户的对话
 user_dialogues = defaultdict(list)
+
+# 用一个字典来记录用户最后一次发送的消息的序号
+last_message_indices = defaultdict(int)
 
 def chatgpt(input_text, user_id):
     
-    # 取得使用者的對話歷史
+    # 取得用户的对话历史
     dialogues = user_dialogues[user_id]
     
-    # 如果對話數量超過20，就只保留最近的20個對話
+    # 如果对话数量超过 20，就只保留最近的 20 个对话
     if len(dialogues) > 20:
         dialogues = dialogues[-20:]
     
-    # 將歷史對話轉成 OpenAI API 所需的格式，即顯示誰說的
+    # 用一个变量来记录用户最后一次发送的消息是否为偶数
+    last_message_is_even = last_message_indices[user_id] % 2 == 0
+    
+    # 将历史对话转成 OpenAI API 所需的格式，即显示谁说的
     history_formatted = ""
     for i, dialogue in enumerate(dialogues):
+        # 根据用户最后一次发送的消息是奇数还是偶数来决定是用户说的话还是AI说的话
         if i % 2 == 0:
-            history_formatted += f"\nUser: {dialogue}"
+            if last_message_is_even:
+                history_formatted += f"\nUser: {dialogue}"
+            else:
+                history_formatted += f"\nAI: {dialogue}"
         else:
-            history_formatted += f"\nAI: {dialogue}"
+            if last_message_is_even:
+                history_formatted += f"\nAI: {dialogue}"
+            else:
+                history_formatted += f"\nUser: {dialogue}"
 
-    # 生成回應
+    # 生成回应
     response = openai.Completion.create(
         engine=model_engine,
         prompt=input_text,
@@ -52,13 +65,15 @@ def chatgpt(input_text, user_id):
         temperature=1.2
     )
 
-    # 將這次的輸入和回應加入使用者的對話歷史中
+    # 将这次的输入和回应加入用户的对话历史中
     user_dialogues[user_id].append(input_text)
     user_dialogues[user_id].append(response.choices[0].text)
+    
+    # 更新用户最后一次发送的消息的序号
+    last_message_indices[user_id] += 1
 
-    # 輸出回應
+    # 输出回应
     return response.choices[0].text
-
     
 
 app = Flask(__name__)
